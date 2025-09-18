@@ -1,0 +1,43 @@
+if [[ ":$FPATH:" != *":/Users/aryansuri/.zsh/completions:"* ]]; then export FPATH="/Users/aryansuri/.zsh/completions:$FPATH"; fi
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME=""
+source $ZSH/oh-my-zsh.sh
+export EDITOR="nvim"
+export VISUAL="nvim"
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+
+alias ..="cd .."
+alias ...="cd ../.."
+alias l="ls -all"
+alias v="nvim"
+alias nv="nvim ."
+alias t="tmux"
+alias g="git"
+alias gs="git status -sb"
+alias gc="git commit -svp"
+alias gp="git push"
+alias gl="git pull --rebase"
+alias lg="git log --oneline --graph --decorate"
+alias gk="gitk"
+alias iap="echo 6974277320616c6c20706f737369626c652e"
+alias dv="cd ~/programming/"
+alias docs="cd ~/Documents/Sync/ && nvim ."
+alias kb="cat ~/.zshrc"
+export GOPATH="$HOME/go"
+export PATH="$GOPATH/bin:$PATH"
+alias py="python3"
+alias pipi="pip install"
+alias nr="yarn init"
+alias ni="yarn add"
+# alias cm="cmake . && make -j$(nproc)"
+alias gcc="g++-14 -Wall -Wextra -pedantic -std=c++2a"
+alias ta="tmux attach -t"
+alias tn="tmux new -s"
+alias tls="tmux ls"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+stty -ixon          
+set -o vi          
