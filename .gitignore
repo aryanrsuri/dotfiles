@@ -1,0 +1,13 @@
+.DS_Store
+._*
+.nvimlog
+*.log
+.zcompdump*
+.bash_history
+.zsh_history
+.zsh_sessions/
+.env
+.env.*
+*.pem
+*.key
+*.local

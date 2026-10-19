@@ -1,0 +1,40 @@
+font-family = ComicShanns Nerd Font
+font-size = 13.5
+font-feature = -calt,-liga,-dlig
+background = #202020
+foreground = #d0d0d0
+background-opacity = 1
+background-blur = false
+selection-background = #484848
+selection-foreground = #d0d0d0
+cursor-color = #d0d0d0
+cursor-text = #202020
+cursor-style = block
+cursor-style-blink = false
+shell-integration-features = no-cursor
+minimum-contrast = 1
+
+palette = 0=#202020
+palette = 1=#af5f5f
+palette = 2=#87af5f
+palette = 3=#afaf5f
+palette = 4=#5f87af
+palette = 5=#af87af
+palette = 6=#5f9f9f
+palette = 7=#d0d0d0
+palette = 8=#808080
+palette = 9=#cf7f7f
+palette = 10=#a7cf7f
+palette = 11=#cfcf7f
+palette = 12=#7fa7cf
+palette = 13=#cfa7cf
+palette = 14=#7fbfbf
+palette = 15=#eeeeee
+
+window-padding-x = 0
+window-padding-y = 0
+window-padding-balance = false
+window-width = 187
+window-height = 72
+window-theme = dark
+macos-titlebar-style = native
