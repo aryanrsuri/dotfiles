@@ -1,6 +1,6 @@
 # macOS dotfiles
 
-Active configuration captured from my Apple Silicon Mac on 2026-10-18.
+Active configuration captured from my Apple Silicon Mac and Workhorse on 2026-10-31.
 The app configurations are copied unchanged. The Git template keeps identity
 and signing-key fields blank, as in the original repository.
 
@@ -90,8 +90,8 @@ Set `user.name`, `user.email`, and `user.signingkey` in a personal copy of
 ## Behavior
 
 Both Bash and Zsh use the shared one-line prompt, vi editing, aliases, and
-history settings. Interactive terminals automatically attach to the tmux
-session `working`. To open a shell without attaching:
+history settings. The `workhorse` alias connects over SSH and attaches to the remote tmux
+session `working`. To open a local shell:
 
 ```sh
 TERM_STYLE_NO_TMUX=1 zsh
@@ -101,3 +101,41 @@ tmux uses Ctrl-Space as its prefix; prefix + `r` reloads `.tmux.conf`.
 Neovim uses Space as its leader: `ff` finds files, `fg` searches text, and `e`
 toggles Neo-tree. The reference colorscheme shares its ANSI palette with
 Ghostty and the Terminal profile.
+
+## Mac and Workhorse additions (2026-10-31)
+
+`workhorse/` mirrors selected paths under `/home/aryan`: shell startup files,
+shared shell configuration, tmux, Neovim and its live theme refresh scripts,
+terminal palettes, btop, Jujutsu, Helix, Fish, lazygit, Go environment and
+`.local/bin/term-theme`. Restore these on Workhorse, not on the Mac.
+Its Git configuration is an identity-free template, like the root template.
+
+Additional Mac mappings:
+
+| Repository path | Destination |
+| --- | --- |
+| `.aerospace.toml` | `~/.aerospace.toml` |
+| `config/` | Corresponding paths in `~/.config/` |
+| `ssh/config` | `~/.ssh/config` |
+| `bin/term-theme` | `~/.local/bin/term-theme` |
+| `launchagents/` | `~/Library/LaunchAgents/` |
+| `terminal-style/dark`, `terminal-style/light` | `~/.config/terminal-style/` |
+| Both `terminal-style/*.terminal` profiles | Import into Terminal.app |
+
+Copy both palette directories before starting tmux. Initialize the local theme
+with `~/.local/bin/term-theme`; initialize Workhorse with
+`~/.local/bin/term-theme dark` (or `light`). The `current` symlink is runtime state.
+Copy the entire Neovim config tree on each respective machine.
+
+The Mac LaunchAgent runs `macnotify --retry 5,15 term-theme --sync`, which follows
+macOS appearance and sends the selected theme over SSH to Workhorse. It uses
+absolute `/Users/aryansuri` paths. Install `macnotify` separately from
+https://github.com/aryanrsuri/macnotify (captured revision
+`cc2ec2541f1fb9e039ecb88e88892c379ef7fc83`). Its binary is not a dotfile.
+The Workhorse SSH name depends on local/Tailscale name resolution; the SSH
+configuration also includes the locally generated OrbStack configuration.
+`vpnstatus` requires Tailscale, curl and jq; interactive shells invoke fastfetch.
+
+This is a selected configuration snapshot, not a complete home-directory backup.
+Credentials, SSH keys, known_hosts, agent auth/session data, system VPN state,
+logs, caches, installed binaries and old backup copies are excluded.

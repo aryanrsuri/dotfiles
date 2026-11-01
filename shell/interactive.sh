@@ -14,9 +14,10 @@ alias _='sudo '
 alias grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.venv,venv}'
 alias egrep='grep -E'
 alias fgrep='grep -F'
-alias v='nvim'
+alias vi='nvim'
 alias nv='nvim .'
 alias t='tmux'
+alias workhorse="ssh -t workhorse 'tmux new -As working'"
 alias g='git'
 alias ga='git add .'
 alias gs='git status -sb --porcelain'
@@ -28,7 +29,6 @@ alias gk='gitk'
 alias iap='echo 6974277320616c6c20706f737369626c652e'
 alias dsa='nvim ~/programming/MASTER.txt'
 alias dv='cd ~/programming/'
-alias docs='cd ~/Documents/Sync/ && nvim .'
 alias kb='cat ~/.config/shell/interactive.sh'
 alias py='python3'
 alias pipi='uv pip install'
@@ -36,7 +36,38 @@ alias gcc='g++-14 -Wall -Wextra -pedantic -std=c++2a'
 alias ta='tmux attach -t'
 alias tn='tmux new -s'
 alias tls='tmux ls'
-alias cr='codex --dangerously-bypass-hook-trust'
+alias cr='codex --dangerously-bypass-approvals-and-sandbox'
+
+# VPN status table: mesh peer, exit-node path, and actual Mullvad egress.
+vpnstatus() {
+    local vpn_mullvad vpn_tail
+    vpn_mullvad=$(curl --noproxy '*' --connect-timeout 3 --max-time 6 -fsS \
+        https://am.i.mullvad.net/json 2>/dev/null | jq -er '
+        if .mullvad_exit_ip == true then "Yes"
+        elif .mullvad_exit_ip == false then "No" else "Unknown" end
+    ' 2>/dev/null) || vpn_mullvad=Unknown
+    vpn_tail=$(tailscale status --json 2>/dev/null | jq -er '
+        def connection:
+            if . == null then "None"
+            elif .Online == false then "Offline"
+            elif .Active != true then "Idle"
+            elif (.CurAddr // "") != "" then "Direct"
+            elif (.PeerRelay // "") != "" or (.Relay // "") != "" then "Relayed"
+            else "Unknown" end;
+        [.Peer[]? | select(.ExitNode == true)][0] as $exit |
+        [.Peer[]? | select((.DNSName // "" | split(".")[0]) | . == "workhorse" or . == "aryans-macbook-pro")][0] as $peer |
+        "Tailscale\t\(if .BackendState == "Running" then "Connected" else (.BackendState // "Unknown") end)\nPeer\t\($peer | connection)\nExit node\t\(if $exit != null then ($exit.HostName + " (" + ($exit | connection) + ")") else "None" end)"
+    ' 2>/dev/null) || vpn_tail=$(printf 'Tailscale\tUnavailable\nPeer\tUnknown\nExit node\tUnknown')
+    printf '%s\nMullvad\t%s\n' "$vpn_tail" "$vpn_mullvad" | awk -F '\t' '
+        { label[NR] = $1; value[NR] = $2; if (length($2) > width) width = length($2) }
+        END {
+            border = sprintf("%*s", width + 2, ""); gsub(/ /, "-", border)
+            border = "+-----------+" border "+"
+            print border
+            for (i = 1; i <= NR; i++) printf "| %-9s | %-*s |\n", label[i], width, value[i]
+            print border
+        }'
+}
 
 [ ! -s "$NVM_DIR/nvm.sh" ] || . "$NVM_DIR/nvm.sh"
 [ ! -s "$NVM_DIR/bash_completion" ] || . "$NVM_DIR/bash_completion"
@@ -97,11 +128,8 @@ else
         . "$HOME/.oh-my-zsh/plugins/gitfast/git-completion.bash"
 fi
 
-# Keep automatic tmux entry, while allowing detach and nested bash/zsh sessions.
-# TERM_STYLE_NO_TMUX=1 skips entry for a one-off shell.
-if [ -z "${TMUX:-}" ] && [ -z "${TERM_STYLE_TMUX_STARTED:-}" ] && \
-    [ -z "${TERM_STYLE_NO_TMUX:-}" ] && [ -t 0 ] && [ -t 1 ] && \
-    command -v tmux >/dev/null 2>&1; then
-    export TERM_STYLE_TMUX_STARTED=1
-    tmux new-session -A -s working
+
+# Show system information in new terminal and tmux shells.
+if [ -t 1 ]; then
+    fastfetch
 fi

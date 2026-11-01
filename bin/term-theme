@@ -1,0 +1,67 @@
+#!/bin/bash
+# Follow macOS appearance locally or on workhorse. Ghostty follows it natively.
+set -euo pipefail
+case "${1:-}" in
+    ''|--watch|--workhorse|--sync) ;;
+    *) printf 'Usage: term-theme [--watch|--workhorse|--sync] (follows macOS appearance)\n' >&2; exit 2 ;;
+esac
+if [ "${1:-}" = --sync ]; then
+    status=0
+    "$0" --watch || status=1
+    "$0" --workhorse || status=1
+    exit "$status"
+fi
+styles="$HOME/.config/terminal-style"
+appearance=$(defaults read -g AppleInterfaceStyle 2>/dev/null || true)
+if [ "$appearance" = Dark ]; then
+    mode=dark
+    profile='Reference — ComicShanns'
+else
+    mode=light
+    profile='Reference Light — ComicShanns'
+fi
+if [ "${1:-}" = --workhorse ]; then
+    # The listener retries failures; SSH never prompts for interactive input.
+    exec /usr/bin/ssh -n -T \
+        -o BatchMode=yes \
+        -o ConnectTimeout=5 \
+        -o ConnectionAttempts=1 \
+        -o ServerAliveInterval=5 \
+        -o ServerAliveCountMax=1 \
+        workhorse "\"\$HOME/.local/bin/term-theme\" '$mode'"
+fi
+
+terminal_pid=$(pgrep -x Terminal || true)
+sync_state="$mode:$terminal_pid"
+if [ "${1:-}" = --watch ] && [ -f "$styles/synced-state" ] && \
+    [ "$(cat "$styles/synced-state")" = "$sync_state" ]; then
+    exit 0
+fi
+
+defaults write com.apple.Terminal 'Default Window Settings' -string "$profile"
+defaults write com.apple.Terminal 'Startup Window Settings' -string "$profile"
+if [ -n "$terminal_pid" ]; then
+    osascript - "$profile" <<'APPLESCRIPT'
+on run argv
+    if application "Terminal" is running then
+        tell application "Terminal"
+            set chosenProfile to settings set (item 1 of argv)
+            set default settings to chosenProfile
+            set startup settings to chosenProfile
+            repeat with terminalWindow in windows
+                repeat with terminalTab in tabs of terminalWindow
+                    set current settings of terminalTab to chosenProfile
+                end repeat
+            end repeat
+        end tell
+    end if
+end run
+APPLESCRIPT
+fi
+
+ln -sfn "$mode" "$styles/current"
+if command -v tmux >/dev/null 2>&1 && tmux list-sessions >/dev/null 2>&1; then
+    tmux source-file "$styles/current/theme.tmux"
+fi
+printf '%s\n' "$sync_state" > "$styles/synced-state"
+printf 'Terminal and tmux now follow macOS appearance: %s.\n' "$mode"

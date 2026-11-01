@@ -1,0 +1,19 @@
+[user]
+	email =
+	name =
+	signingkey =
+[init]
+	defaultBranch = master
+[commit]
+	gpgsign = true
+[tag]
+	gpgSign = true
+[alias]
+	cm = commit -S -s -v
+	pwl = push --force-with-lease
+	lg = log --oneline --decorate --color
+	df = diff --color --word-diff=color --ignore-all-space --minimal HEAD
+	gs = status
+	st = status
+[diff]
+	tool = nvimdiff

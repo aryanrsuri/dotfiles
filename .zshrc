@@ -9,3 +9,14 @@ bashcompinit
 [ ! -r "$HOME/.bun/_bun" ] || . "$HOME/.bun/_bun"
 
 . "$HOME/.config/shell/interactive.sh"
+
+# >>> juliaup initialize >>>
+
+# !! Contents within this block are managed by juliaup !!
+
+path=('/Users/aryansuri/.juliaup/bin' $path)
+export PATH
+# Tab completion for juliaup and julia channel selection
+[ -f "/Users/aryansuri/.julia/juliaup/completions/zsh.zsh" ] && source "/Users/aryansuri/.julia/juliaup/completions/zsh.zsh"
+
+# <<< juliaup initialize <<<

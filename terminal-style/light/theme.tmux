@@ -1,0 +1,7 @@
+set -g status-style 'bg=#eee8d5,fg=#62675b'
+set -g status-right '#[bg=#d8c9a7,fg=#30332e,bold] %d/%m #[bg=#e4d9bc] %H:%M:%S '
+setw -g window-status-format '#[fg=#80631c]#I#[fg=#62675b]:#W#F'
+setw -g window-status-current-format '#[fg=#30332e]#I:#W#[fg=colour6]#F'
+setw -g window-status-style 'bg=#eee8d5,fg=#62675b'
+setw -g window-status-current-style 'bg=#eee8d5,fg=#30332e'
+set -g message-style 'bg=#e4d9bc,fg=#30332e'

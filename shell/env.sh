@@ -5,6 +5,7 @@ fi
 
 export EDITOR=nvim VISUAL=nvim
 export GOPATH="$HOME/go" NB="$HOME/programming/nb/bin"
+export PNPM_HOME="$HOME/Library/pnpm"
 export NVM_DIR="$HOME/.nvm" BUN_INSTALL="$HOME/.bun"
 
 shell_prepend_path() {
@@ -12,7 +13,7 @@ shell_prepend_path() {
 }
 
 for shell_bin in /opt/homebrew/sbin /opt/homebrew/bin /opt/homebrew/opt/python/libexec/bin \
-    "$HOME/.cargo/bin" "$HOME/bin" "$HOME/.local/bin" "$HOME/.deno/bin" \
+    "$PNPM_HOME/bin" "$PNPM_HOME" "$HOME/.cargo/bin" "$HOME/bin" "$HOME/.local/bin" "$HOME/.deno/bin" \
     "$GOPATH/bin" "$BUN_INSTALL/bin" "$NB"; do
     shell_prepend_path "$shell_bin"
 done

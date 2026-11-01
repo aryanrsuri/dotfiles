@@ -14,10 +14,9 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   spec = {
-    { "nvim-telescope/telescope.nvim", tag = "0.1.6", dependencies = { "nvim-lua/plenary.nvim" }, cmd = "Telescope" },
+    { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" }, cmd = "Telescope" },
     {
       "nvim-neo-tree/neo-tree.nvim",
-      branch = "v3.x",
       dependencies = {
         "nvim-lua/plenary.nvim",
         "MunifTanjim/nui.nvim",
@@ -67,10 +66,10 @@ require("lazy").setup({
             client.server_capabilities.semanticTokensProvider = nil
           end,
         })
+        vim.lsp.enable("pyright") -- Installed with pnpm.
         require("mason-lspconfig").setup({
           ensure_installed = {
             "clangd",
-            "pyright",
             "gopls",
             "rust_analyzer",
           },
@@ -149,7 +148,7 @@ vim.o.termguicolors = false
 vim.o.number = true
 vim.o.relativenumber = false
 vim.o.numberwidth = 3
-vim.o.signcolumn = "no"
+vim.o.signcolumn = "auto"
 vim.o.foldcolumn = "0"
 vim.o.cursorline = false
 vim.o.showtabline = 0

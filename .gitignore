@@ -11,3 +11,8 @@
 *.pem
 *.key
 *.local
+
+# Version the selected Workhorse theme adapter, not other local state.
+!workhorse/.local/
+!workhorse/.local/bin/
+!workhorse/.local/bin/term-theme
