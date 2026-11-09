@@ -12,6 +12,9 @@ window-padding-y = 0
 window-padding-balance = false
 window-width = 187
 window-height = 72
+background-opacity = 0.80
+background-opacity-cells = true
+background-blur = 30
 macos-titlebar-style = native
 
 # Follow macOS appearance using the matching custom palettes.

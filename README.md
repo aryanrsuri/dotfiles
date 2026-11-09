@@ -77,6 +77,7 @@ cp shell/env.sh shell/interactive.sh "$HOME/.config/shell/"
 cp nvim/init.lua nvim/lazy-lock.json "$HOME/.config/nvim/"
 cp nvim/colors/reference.lua "$HOME/.config/nvim/colors/"
 cp ghostty/config "$HOME/Library/Application Support/com.mitchellh.ghostty/config"
+cp -R terminal-style/dark terminal-style/light "$HOME/.config/terminal-style/"
 cp terminal-style/Reference.terminal "$HOME/.config/terminal-style/"
 ```
 
@@ -126,6 +127,26 @@ Copy both palette directories before starting tmux. Initialize the local theme
 with `~/.local/bin/term-theme`; initialize Workhorse with
 `~/.local/bin/term-theme dark` (or `light`). The `current` symlink is runtime state.
 Copy the entire Neovim config tree on each respective machine.
+
+### Ghostty transparency (2026-11-08)
+
+The Mac's `ghostty/config` owns opacity (`0.80`), blur (`30`), and
+`background-opacity-cells = true`. The light/dark Ghostty palettes define colors
+only. Install the main config at
+`~/Library/Application Support/com.mitchellh.ghostty/config`; Ghostty renders SSH
+tabs locally, so these settings belong on the Mac.
+
+Workhorse's `workhorse/.config/terminal-style/{dark,light}/theme.tmux` files use
+`bg=default` for both `window-style` and `window-active-style`, inheriting the
+terminal background. Copy them to the corresponding paths under `/home/aryan`
+and apply the selected theme to an existing tmux server with:
+
+```sh
+tmux source-file ~/.config/terminal-style/current/theme.tmux
+```
+
+Reload Ghostty with Command-Shift-comma after installing its config. If opacity
+does not update, restart Ghostty after saving any active local work.
 
 The Mac LaunchAgent runs `macnotify --retry 5,15 term-theme --sync`, which follows
 macOS appearance and sends the selected theme over SSH to Workhorse. It uses

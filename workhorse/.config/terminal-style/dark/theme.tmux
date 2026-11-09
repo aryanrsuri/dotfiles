@@ -1,6 +1,6 @@
-# Explicit defaults also let tmux answer application OSC 10/11 color queries.
-setw -g window-style 'bg=#202020,fg=#d0d0d0'
-setw -g window-active-style 'bg=#202020,fg=#d0d0d0'
+# Inherit the terminal background so Ghostty controls transparency.
+setw -g window-style 'bg=default,fg=#d0d0d0'
+setw -g window-active-style 'bg=default,fg=#d0d0d0'
 set -g status-style 'bg=#1e1e1e,fg=#bcbcbc'
 set -g status-right '#[bg=#6d6d6d,fg=#202020,bold] %d/%m #[bg=#949494] %H:%M:%S '
 setw -g window-status-format '#[fg=#a0978b]#I#[fg=#bcbcbc]:#W#F'
